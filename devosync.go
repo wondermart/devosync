@@ -1,7 +1,25 @@
 package main
 
-import "fmt"
+import (
+	"context"
+	"fmt"
+	"log"
+	"os"
+
+	"github.com/urfave/cli/v3"
+)
 
 func main() {
-	fmt.Println("hey girl")
+	cmd := &cli.Command{
+		Name:  "devosync",
+		Usage: "A simple environment sync utility for web developers",
+		Action: func(context.Context, *cli.Command) error {
+			fmt.Println("hey girl")
+			return nil
+		},
+	}
+
+	if err := cmd.Run(context.Background(), os.Args); err != nil {
+		log.Fatal(err)
+	}
 }
