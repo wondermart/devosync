@@ -6,10 +6,17 @@ import (
 	"log"
 	"os"
 
+	altsrc "github.com/urfave/cli-altsrc/v3"
+	"github.com/urfave/cli-altsrc/v3/yaml"
 	"github.com/urfave/cli/v3"
 )
 
 func main() {
+
+	// Define a configuration file.
+	// Expects "devosync.yml" in the working directory.
+	configFile := altsrc.StringSourcer("devosync.yml")
+
 	cmd := &cli.Command{
 		Name:  "devosync",
 		Usage: "A simple environment sync utility for web developers",
@@ -19,6 +26,7 @@ func main() {
 				Aliases: []string{"w"},
 				Value:   false,
 				Usage:   "Warn before performing action.",
+				Sources: cli.NewValueSourceChain(yaml.YAML("warn", configFile)),
 			},
 		},
 		Action: func(ctx context.Context, cmd *cli.Command) error {
