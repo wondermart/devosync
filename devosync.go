@@ -29,6 +29,54 @@ func main() {
 				Sources: cli.NewValueSourceChain(yaml.YAML("warn", configFile)),
 			},
 		},
+		Commands: []*cli.Command{
+			{
+				Name:    "backup",
+				Aliases: []string{"b"},
+				Usage:   "Backup a database or assets on a remote.",
+				Commands: []*cli.Command{
+					{
+						Name:    "database",
+						Aliases: []string{"db", "d"},
+						Usage:   "Backup a database on a remote",
+						Flags: []cli.Flag{
+							&cli.BoolFlag{
+								Name:    "fetch",
+								Aliases: []string{"f"},
+								Usage:   "Fetch local copies of the item(s) being backed up.",
+								Value:   false,
+							},
+						},
+						Action: func(ctx context.Context, cmd *cli.Command) error {
+							if cmd.Bool("fetch") {
+								fmt.Println("Backing up database on ", cmd.Args().First(), " and fetching a local copy.")
+							} else {
+								fmt.Println("Backing up database on ", cmd.Args().First())
+							}
+							return nil
+						},
+					},
+					{
+						Name:    "assets",
+						Aliases: []string{"ass", "a"},
+						Usage:   "Backup assets on a remote",
+						Action: func(ctx context.Context, cmd *cli.Command) error {
+							fmt.Println("Backing up assets on ", cmd.Args().First())
+							return nil
+						},
+					},
+				},
+			},
+			{
+				Name:    "import",
+				Aliases: []string{"i"},
+				Usage:   "Import a database or assets locally.",
+				Action: func(ctx context.Context, cmd *cli.Command) error {
+					fmt.Println("Importing ____ to the local environment", cmd.Args().First())
+					return nil
+				},
+			},
+		},
 		Action: func(ctx context.Context, cmd *cli.Command) error {
 
 			temp := "Test"
